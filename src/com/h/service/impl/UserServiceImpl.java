@@ -15,4 +15,16 @@ public class UserServiceImpl implements UserService {
         UserDao userDao = new UserDaoImpl();
         return userDao.queryUsers();
     }
+
+    @Override
+    public User queryUserById(String userId) throws SQLException {
+        UserDao userDao = new UserDaoImpl();
+        return userDao.queryUserById(userId);
+    }
+
+    @Override
+    public void addUser(User user) throws SQLException {
+        UserDao userDao = new UserDaoImpl();
+        userDao.addUser(user);
+    }
 }
