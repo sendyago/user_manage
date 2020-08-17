@@ -14,8 +14,23 @@ import java.util.List;
 public class UserDaoImpl implements UserDao {
 
     @Override
-    public List<User> queryUsers() throws SQLException {
-        String sql = "select u.*, r.roleName from userInfo u left join roleInfo r on r.roleId = u.roleId";
+    public List<User> queryUsers(User u, int pageNum, int lineNum) throws SQLException {
+        int limit_x = (pageNum - 1) * lineNum;
+        int limit_y = lineNum;
+        StringBuffer sql = new StringBuffer("select u.*, r.roleName from userInfo u left join roleInfo r on r.roleId = u.roleId");
+        sql.append(" where 1 = 1 ");
+        if (u.getUserId() != null && !"".equals(u.getUserId())) {
+            sql.append(" and u.userId like '%" + u.getUserId() + "%' ");
+        }
+        if (u.getUserName() != null && !"".equals(u.getUserName())) {
+            sql.append(" and u.userName like '%" + u.getUserName() + "%' ");
+        }
+        if (u.getGender() != 0) {
+            sql.append(" and u.gender =" + u.getGender());
+        }
+        sql.append(" order by u.userName ");
+        sql.append(" limit " + limit_x + "," + limit_y);
+        System.out.println(sql.toString());
         List<User> list = new ArrayList<>();
         MysqlDB mysqlDB = new MysqlDB();
         Connection conn = mysqlDB.getConn();
@@ -23,7 +38,7 @@ public class UserDaoImpl implements UserDao {
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery(sql);
+            rs = stmt.executeQuery(sql.toString());
             while (rs.next()) {
                 User user = new User();
                 user.setUserId(rs.getString("userId"));
@@ -42,6 +57,41 @@ public class UserDaoImpl implements UserDao {
             conn.close();
         }
         return list;
+    }
+
+    @Override
+    public int queryUserCount(User u) throws SQLException {
+        StringBuffer sql = new StringBuffer("select count(*) as userCount from userInfo u ");
+        sql.append(" where 1 = 1");
+        if (u.getUserId() != null && !"".equals(u.getUserId())) {
+            sql.append(" and u.userId like '%" + u.getUserId() + "%' ");
+        }
+        if (u.getUserName() != null && !"".equals(u.getUserName())) {
+            sql.append(" and u.userName like '%" + u.getUserName() + "%' ");
+        }
+        if (u.getGender() != 0) {
+            sql.append(" and u.gender =" + u.getGender());
+        }
+        System.out.println(sql.toString());
+        MysqlDB mysqlDB = new MysqlDB();
+        Connection conn = mysqlDB.getConn();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int userCount = 0;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(sql.toString());
+            while (rs.next()) {
+                userCount = rs.getInt("userCount");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            rs.close();
+            stmt.close();
+            conn.close();
+        }
+        return userCount;
     }
 
     @Override
@@ -88,6 +138,46 @@ public class UserDaoImpl implements UserDao {
         try {
             stmt = conn.createStatement();
             stmt.execute(sql.toString());
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            stmt.close();
+            conn.close();
+        }
+    }
+
+    @Override
+    public void editUser(User user) throws SQLException {
+        StringBuffer sql = new StringBuffer("update userInfo set ");
+        sql.append(" userName='" + user.getUserName() + "',");
+        sql.append(" userPassword='" + user.getUserPassword() + "',");
+        sql.append(" gender=" + user.getGender() + ",");
+        sql.append(" roleId=" + user.getRoleId());
+        sql.append(" where userId='" + user.getUserId() + "'");
+        MysqlDB mysqlDB = new MysqlDB();
+        Connection conn = mysqlDB.getConn();
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.execute(sql.toString());
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        } finally {
+            stmt.close();
+            conn.close();
+        }
+    }
+
+    public void deleteUser(String userId) throws SQLException {
+        String sql = "delete from userInfo where userId='"+userId+"'";
+        MysqlDB mysqlDB = new MysqlDB();
+        Connection conn = mysqlDB.getConn();
+        Statement stmt = null;
+        try {
+            stmt = conn.createStatement();
+            stmt.execute(sql);
 
         } catch (SQLException throwables) {
             throwables.printStackTrace();
