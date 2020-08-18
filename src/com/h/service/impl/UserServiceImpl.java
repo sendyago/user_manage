@@ -14,9 +14,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> queryUsers(User user, int pageNum, int lineNum) throws SQLException {
-        int limit_x = (pageNum - 1) * lineNum;
-        int limit_y = lineNum;
-        return userDao.queryUsers(user, limit_x, limit_y);
+        return userDao.queryUsers(user, pageNum, lineNum);
     }
 
     @Override
