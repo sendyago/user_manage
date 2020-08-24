@@ -13,6 +13,7 @@
     <title>用户管理</title>
 </head>
 <body>
+    <jsp:include page="/index.jsp" />
     <button type="button" onclick="addUser();">添 加</button>
     <form method="post" id="queryForm" action="<%=path%>/userServlet">
         <input type="text" name="uId" value="${user.userId}" placeholder="用户ID"/>
@@ -63,7 +64,7 @@
     }
 
     function addUser() {
-        window.location.href = "<%=path%>/pages/user/addUser.jsp    ";
+        window.location.href = "<%=path%>/userServlet?type=2";
     }
 
     function editUser(userId) {
