@@ -25,6 +25,15 @@
         <url-pattern>/userServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>roleServlet</servlet-name>
+        <servlet-class>com.h.servlet.RoleServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>roleServlet</servlet-name>
+        <url-pattern>/roleServlet</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodeFilter</filter-name>
         <filter-class>com.h.servlet.EncodeFilter</filter-class>
