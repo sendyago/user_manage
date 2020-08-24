@@ -1,7 +1,10 @@
 package com.h.servlet;
 
+import com.h.service.RoleService;
 import com.h.service.UserService;
+import com.h.service.impl.RoleServiceImpl;
 import com.h.service.impl.UserServiceImpl;
+import com.h.vo.Role;
 import com.h.vo.User;
 
 import javax.servlet.ServletException;
@@ -14,7 +17,20 @@ import java.util.List;
 
 public class UserServlet extends HttpServlet {
 
-    UserService userService = new UserServiceImpl();
+    UserService userService;
+    RoleService roleService;
+
+    @Override
+    public void init() throws ServletException {
+        userService = new UserServiceImpl();
+        roleService = new RoleServiceImpl();
+    }
+
+    @Override
+    public void destroy() {
+        userService = null;
+        roleService = null;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -60,10 +76,14 @@ public class UserServlet extends HttpServlet {
             int pl = 10, pn = 1, cn = 0, tn = userService.queryUserCount(user2);
             // tp总的页数
             int tp = tn / 10 + (tn % 10 == 0 ? 0 : 1);
-            if (pageNum != null) {
+            // 当根据查询条件查询结果为空时，总页数默认为1页
+            if (tp == 0) {
+                tp = 1;
+            }
+            if (pageNum != null && !"".equals(pageNum)) {
                 pn = Integer.parseInt(pageNum);
             }
-            if (changeNum != null) {
+            if (changeNum != null && !"".equals(changeNum)) {
                 cn = Integer.parseInt(changeNum);
             }
 
@@ -143,10 +163,19 @@ public class UserServlet extends HttpServlet {
     public void editUser(HttpServletRequest req, HttpServletResponse resp) {
         try {
             String userId = req.getParameter("userId");
-            User user = userService.queryUserById(userId);
-            req.setAttribute("user", user);
-            req.setAttribute("flag", "1");
+            List<Role> roleList = roleService.queryRolesBy(new Role(), 0, 0);
+            req.setAttribute("roleList", roleList);
+            if (userId == null || "".equals(userId)) {
+                // add
+
+            } else {
+                // edit
+                User user = userService.queryUserById(userId);
+                req.setAttribute("user", user);
+                req.setAttribute("flag", "1");
+            }
             req.getRequestDispatcher("/pages/user/addUser.jsp").forward(req, resp);
+
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         } catch (ServletException e) {
