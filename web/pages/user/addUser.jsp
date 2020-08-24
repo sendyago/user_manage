@@ -22,8 +22,9 @@
         性别：<input type="radio" id="gender1" name="gender" value="1" <c:if test="${user.gender == 1}">checked</c:if>/> 男 <input type="radio" id="gender2" name="gender" value="2" <c:if test="${user.gender == 2}">checked</c:if>/> 女 <br>
     角色：<select id="roleId" name="roleId">
             <option value="">请选择...</option>
-            <option value="1" <c:if test="${user.roleId == 1}">selected</c:if>>系统管理员</option>
-            <option value="2" <c:if test="${user.gender == 2}">selected</c:if>>普通用户</option>
+            <c:forEach items="${roleList}" var="r">
+                <option value="${r.roleId}" <c:if test="${user.roleId == r.roleId}">selected</c:if>>${r.roleName}</option>
+            </c:forEach>
          </select><br>
         <button type="button" onclick="add();" >保 存</button>
         <button type="button" onclick="cancel();" >取 消</button>
