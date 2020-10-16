@@ -13,8 +13,14 @@
     <title>$Title$</title>
   </head>
   <body>
-  <a href="<%=path%>/userServlet?type=0">用户管理</a> &nbsp;
-  <a href="<%=path%>/roleServlet?type=0">角色管理</a>
+  <h1>您好，${userName}</h1>
+  <a href="<%=path%>/logoutServlet">退出系统</a>
+  <br><br>
+  <c:forEach items="${menus}" var="m">
+    <c:if test="${m.checkId != null}">
+    <a href="<%=path%>${m.menuPath}">${m.menuName}</a> &nbsp;
+    </c:if>
+  </c:forEach>
   <hr  />
   <br/>
   </body>

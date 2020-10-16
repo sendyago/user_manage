@@ -34,6 +34,33 @@
         <url-pattern>/roleServlet</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>menuServlet</servlet-name>
+        <servlet-class>com.h.servlet.MenuServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>menuServlet</servlet-name>
+        <url-pattern>/menuServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>roleMenuServlet</servlet-name>
+        <servlet-class>com.h.servlet.RoleMenuServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>roleMenuServlet</servlet-name>
+        <url-pattern>/roleMenuServlet</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>logoutServlet</servlet-name>
+        <servlet-class>com.h.servlet.LogoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>logoutServlet</servlet-name>
+        <url-pattern>/logoutServlet</url-pattern>
+    </servlet-mapping>
+
     <filter>
         <filter-name>encodeFilter</filter-name>
         <filter-class>com.h.servlet.EncodeFilter</filter-class>

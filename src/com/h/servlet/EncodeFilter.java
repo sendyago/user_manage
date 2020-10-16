@@ -22,7 +22,17 @@ public class EncodeFilter implements Filter {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
         request.setCharacterEncoding(encode);
         response.setCharacterEncoding(encode);
-        filterChain.doFilter(request, response);
+        Object obj = request.getSession().getAttribute("userId");
+        if (obj != null) {
+            filterChain.doFilter(request, response);
+        } else {
+            String servletName = request.getServletPath();
+            if ("/loginServlet".equals(servletName)) {
+                filterChain.doFilter(request, response);
+            } else {
+                request.getRequestDispatcher("/login.jsp").forward(request, response);
+            }
+        }
     }
 
     @Override
